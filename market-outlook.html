@@ -422,6 +422,38 @@ em {
 .proof-card:focus-within { outline: 3px solid var(--gold); outline-offset: 3px; }
 .proof-caption strong { font-size: 1.12rem; }
 
+
+.testimonials { margin-top: clamp(38px, 6vw, 74px); }
+.testimonials h3 { margin-bottom: 17px; font-size: clamp(1.45rem, 3vw, 2rem); }
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.testimonial-image {
+  height: 182px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: #151412;
+}
+.testimonial-image:focus-visible { outline-offset: -5px; }
+.testimonial-image img { width: 100%; height: 100%; padding: 9px; object-fit: contain; }
+.testimonial-copy { padding: 17px; }
+.testimonial-copy p { margin-bottom: 6px; color: var(--muted); font-size: .84rem; }
+.testimonial-copy blockquote { font-weight: 650; }
+@media (max-width: 760px) {
+  .testimonial-grid { grid-template-columns: 1fr; gap: 10px; }
+  .testimonial-image { height: clamp(170px, 44vw, 230px); }
+}
+
 .history { margin-top: clamp(38px, 6vw, 74px); }
 .history-head {
   display: flex;
@@ -1003,6 +1035,43 @@ em {
           </button>
         </article>
       </div>
+
+
+      <section class="testimonials" id="testimoni" aria-labelledby="testimoni-title">
+        <h3 id="testimoni-title">Cerita dari member Market Outlook</h3>
+        <div class="testimonial-grid">
+          <article class="testimonial-card">
+            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni Market Outlook dari Instagram Story" data-kind="member" aria-label="Perbesar testimoni Market Outlook dari Instagram Story" aria-haspopup="dialog">
+              <img src="testimoni-ig-outlook.webp" width="920" height="635" loading="lazy" alt="Cuplikan Instagram Story SAF tentang pengalaman member setelah dua minggu memakai Market Outlook">
+              <span class="image-action" aria-hidden="true">↗</span>
+            </button>
+            <div class="testimonial-copy">
+              <p>Instagram Story SAF</p>
+              <blockquote>“baru jalan 2 minggu tp kok cocok”</blockquote>
+            </div>
+          </article>
+          <article class="testimonial-card">
+            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · ERAA" data-kind="member" aria-label="Perbesar testimoni chat member tentang ERAA" aria-haspopup="dialog">
+              <img src="testimoni-member-eraa.webp" width="612" height="795" loading="lazy" alt="Chat member yang mengomentari analisa ERAA dan membagikan tangkapan layar return posisinya di Stockbit">
+              <span class="image-action" aria-hidden="true">↗</span>
+            </button>
+            <div class="testimonial-copy">
+              <p>Chat member · ERAA</p>
+              <blockquote>“keren analisanya saf market outlook”</blockquote>
+            </div>
+          </article>
+          <article class="testimonial-card">
+            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · BUMI" data-kind="member" aria-label="Perbesar testimoni chat member tentang BUMI" aria-haspopup="dialog">
+              <img src="testimoni-member-bumi.webp" width="892" height="960" loading="lazy" alt="Chat member yang menyebut mengikuti analisa Outlook dan melaporkan bahwa BUMI mencapai TP3">
+              <span class="image-action" aria-hidden="true">↗</span>
+            </button>
+            <div class="testimonial-copy">
+              <p>Chat member · BUMI</p>
+              <blockquote>“udh hit smpai TP3 utk BUMI”</blockquote>
+            </div>
+          </article>
+        </div>
+      </section>
 
       <div class="history">
         <div class="history-head">

@@ -258,7 +258,7 @@ em {
 .hero-caption span { color: var(--gold); }
 
 .benefits { border-top: 1px solid #ffffff17; }
-.feature-grid, .history-grid, .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.feature-grid, .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
 
 .feature {
   padding: clamp(22px, 3vw, 34px);
@@ -377,10 +377,46 @@ em {
   cursor: pointer;
 }
 
-.proof-grid {
+.carousel-track {
+  --items-per-view: 3;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--items-per-view), minmax(0, 1fr));
   gap: 15px;
+  touch-action: pan-y;
+}
+.carousel [hidden] { display: none; }
+.carousel-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 13px;
+}
+.carousel-count {
+  min-width: 75px;
+  color: var(--muted);
+  font-size: .88rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.carousel-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.carousel-arrow:hover { background: var(--gold); color: var(--ink); }
+@media (min-width: 761px) and (max-width: 1000px) {
+  .carousel-track { --items-per-view: 2; }
+}
+@media (max-width: 760px) {
+  .carousel-track { --items-per-view: 1; gap: 10px; }
 }
 
 .proof-card {
@@ -418,11 +454,6 @@ em {
 
 .testimonials { margin-top: clamp(38px, 6vw, 74px); }
 .testimonials h3 { margin-bottom: 17px; font-size: clamp(1.45rem, 3vw, 2rem); }
-.testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 15px;
-}
 .testimonial-card {
   display: flex;
   flex-direction: column;
@@ -443,7 +474,6 @@ em {
 .testimonial-copy p { margin-bottom: 6px; color: var(--muted); font-size: .84rem; }
 .testimonial-copy blockquote { font-weight: 650; }
 @media (max-width: 760px) {
-  .testimonial-grid { grid-template-columns: 1fr; gap: 10px; }
   .testimonial-image { height: clamp(170px, 44vw, 230px); }
 }
 
@@ -463,6 +493,8 @@ em {
   border-radius: var(--radius);
   background: #141413;
 }
+.history-item.is-loss .gain, .history-item.is-loss .tp { color: #ffab9e; }
+.history-item.is-loss .tp { border-color: #78463e; }
 .history-item .ticker { font-size: 1.08rem; letter-spacing: .035em; }
 .ticker-line { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .tp {
@@ -803,7 +835,7 @@ em {
   .section-head, .audience-layout, .faq-layout { grid-template-columns: 1fr; gap: 13px; }
   .section-head.centered { text-align: left; }
   .section-head.centered > p { margin: 12px 0 0; }
-  .feature-grid, .history-grid, .pricing-grid { grid-template-columns: 1fr; gap: 11px; }
+  .feature-grid, .pricing-grid { grid-template-columns: 1fr; gap: 11px; }
   .feature { padding: 21px; }
   .feature-key { margin-bottom: 12px; }
   .report-tabs { width: 100%; margin-bottom: 11px; border-radius: 17px; gap: 3px; }
@@ -811,11 +843,8 @@ em {
   .report-panel { grid-template-columns: 1fr; min-height: 0; padding: 16px; gap: 16px; }
   .report-copy h3 { margin-bottom: 7px; }
   .report-image { grid-row: 1; }
-  .proof-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .proof-card:first-child { grid-column: 1 / -1; }
-  .proof-card:first-child .proof-photo img { width: min(100%, 255px); }
   .proof-photo { padding: 9px; }
-  .proof-card:not(:first-child) .proof-photo { aspect-ratio: 1.22; }
+  .proof-photo img { width: min(100%, 255px); }
   .proof-caption { min-height: 49px; padding: 9px 12px; }
   .history-head { align-items: start; flex-direction: column; }
   .history-item {
@@ -999,108 +1028,293 @@ em {
     <div class="wrap">
       <div class="section-head">
         <h2 id="results-title">Feedback yang dibagikan <em>Member SAF Capital</em></h2>
-        <p>Dari INET sampai AMMN, ini feedback hasil trading yang member SAF bagikan saat mengikuti stockpick SAF Capital. Kamu juga bisa trading dengan riset dari kami.</p>
+        <p>Ini beberapa cuplikan hasil posisi yang member SAF bagikan saat mengikuti stockpick SAF Capital. Kamu juga bisa trading dengan riset dari kami.</p>
       </div>
 
-      <div class="proof-grid">
-        <article class="proof-card">
-          <button type="button" class="image-trigger" data-preview="INET +19,00% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member INET dengan return 19 persen" aria-haspopup="dialog">
-            <span class="proof-photo">
-              <img src="member-inet.webp" width="218" height="185" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi INET +19,00%">
-            </span>
-            <span class="proof-caption"><strong>INET</strong><span aria-hidden="true">↗</span></span>
-          </button>
-        </article>
-        <article class="proof-card">
-          <button type="button" class="image-trigger" data-preview="ESSA +10,29% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member ESSA dengan return 10,29 persen" aria-haspopup="dialog">
-            <span class="proof-photo essa">
-              <img src="member-essa.webp" width="322" height="261" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi ESSA +10,29%">
-            </span>
-            <span class="proof-caption"><strong>ESSA</strong><span aria-hidden="true">↗</span></span>
-          </button>
-        </article>
-        <article class="proof-card">
-          <button type="button" class="image-trigger" data-preview="AMMN +4,62% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member AMMN dengan return 4,62 persen" aria-haspopup="dialog">
-            <span class="proof-photo">
-              <img src="member-ammn.webp" width="306" height="245" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi AMMN +4,62%">
-            </span>
-            <span class="proof-caption"><strong>AMMN</strong><span aria-hidden="true">↗</span></span>
-          </button>
-        </article>
+      <div class="carousel" data-carousel role="region" aria-label="Hasil member">
+        <div class="carousel-track proof-grid" id="hasil-slides" tabindex="0" aria-label="Hasil member, gunakan panah kiri dan kanan">
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="INET +19,00% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member INET dengan return 19 persen" aria-haspopup="dialog">
+              <span class="proof-photo">
+                <img src="member-inet.webp" width="218" height="185" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi INET +19,00%">
+              </span>
+              <span class="proof-caption"><strong>INET</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="ESSA +10,29% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member ESSA dengan return 10,29 persen" aria-haspopup="dialog">
+              <span class="proof-photo essa">
+                <img src="member-essa.webp" width="322" height="261" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi ESSA +10,29%">
+              </span>
+              <span class="proof-caption"><strong>ESSA</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="AMMN +4,62% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member AMMN dengan return 4,62 persen" aria-haspopup="dialog">
+              <span class="proof-photo">
+                <img src="member-ammn.webp" width="306" height="245" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi AMMN +4,62%">
+              </span>
+              <span class="proof-caption"><strong>AMMN</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="MBMA +15,86% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member MBMA" aria-haspopup="dialog">
+              <span class="proof-photo">
+                <img src="hasil-member-mbma.webp" width="752" height="410" loading="lazy" alt="Cuplikan performa posisi MBMA yang dibagikan member SAF, +15,86%">
+              </span>
+              <span class="proof-caption"><strong>MBMA</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="JARR +30,53% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member JARR" aria-haspopup="dialog">
+              <span class="proof-photo">
+                <img src="hasil-member-jarr.webp" width="675" height="364" loading="lazy" alt="Cuplikan performa posisi JARR yang dibagikan member SAF, +30,53%">
+              </span>
+              <span class="proof-caption"><strong>JARR</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+          <article class="proof-card">
+            <button type="button" class="image-trigger" data-preview="KOTA +20,96% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member KOTA" aria-haspopup="dialog">
+              <span class="proof-photo">
+                <img src="hasil-member-kota.webp" width="671" height="362" loading="lazy" alt="Cuplikan performa posisi KOTA yang dibagikan member SAF, +20,96%">
+              </span>
+              <span class="proof-caption"><strong>KOTA</strong><span aria-hidden="true">↗</span></span>
+            </button>
+          </article>
+        </div>
+        <div class="carousel-controls" hidden>
+          <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="hasil-slides" aria-label="Hasil member sebelumnya">←</button>
+          <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
+          <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="hasil-slides" aria-label="Hasil member berikutnya">→</button>
+        </div>
       </div>
 
 
       <section class="testimonials" id="testimoni" aria-labelledby="testimoni-title">
         <h3 id="testimoni-title">Cerita dari member Market Outlook</h3>
-        <div class="testimonial-grid">
-          <article class="testimonial-card">
-            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni Market Outlook dari Instagram Story" data-kind="member" aria-label="Perbesar testimoni Market Outlook dari Instagram Story" aria-haspopup="dialog">
-              <img src="testimoni-ig-outlook.webp" width="920" height="635" loading="lazy" alt="Cuplikan Instagram Story SAF tentang pengalaman member setelah dua minggu memakai Market Outlook">
-              <span class="image-action" aria-hidden="true">↗</span>
-            </button>
-            <div class="testimonial-copy">
-              <p>Instagram Story SAF</p>
-              <blockquote>“baru jalan 2 minggu tp kok cocok”</blockquote>
-            </div>
-          </article>
-          <article class="testimonial-card">
-            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · ERAA" data-kind="member" aria-label="Perbesar testimoni chat member tentang ERAA" aria-haspopup="dialog">
-              <img src="testimoni-member-eraa.webp" width="612" height="795" loading="lazy" alt="Chat member yang mengomentari analisa ERAA dan membagikan tangkapan layar return posisinya di Stockbit">
-              <span class="image-action" aria-hidden="true">↗</span>
-            </button>
-            <div class="testimonial-copy">
-              <p>Chat member · ERAA</p>
-              <blockquote>“keren analisanya saf market outlook”</blockquote>
-            </div>
-          </article>
-          <article class="testimonial-card">
-            <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · BUMI" data-kind="member" aria-label="Perbesar testimoni chat member tentang BUMI" aria-haspopup="dialog">
-              <img src="testimoni-member-bumi.webp" width="892" height="960" loading="lazy" alt="Chat member yang menyebut mengikuti analisa Outlook dan melaporkan bahwa BUMI mencapai TP3">
-              <span class="image-action" aria-hidden="true">↗</span>
-            </button>
-            <div class="testimonial-copy">
-              <p>Chat member · BUMI</p>
-              <blockquote>“udh hit smpai TP3 utk BUMI”</blockquote>
-            </div>
-          </article>
+        <div class="carousel" data-carousel role="region" aria-label="Testimoni">
+          <div class="carousel-track testimonial-grid" id="testimoni-slides" tabindex="0" aria-label="Testimoni, gunakan panah kiri dan kanan">
+            <article class="testimonial-card">
+              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni Market Outlook dari Instagram Story" data-kind="member" aria-label="Perbesar testimoni Market Outlook dari Instagram Story" aria-haspopup="dialog">
+                <img src="testimoni-ig-outlook.webp" width="920" height="635" loading="lazy" alt="Cuplikan Instagram Story SAF tentang pengalaman member setelah dua minggu memakai Market Outlook">
+                <span class="image-action" aria-hidden="true">↗</span>
+              </button>
+              <div class="testimonial-copy">
+                <p>Instagram Story SAF</p>
+                <blockquote>“baru jalan 2 minggu tp kok cocok”</blockquote>
+              </div>
+            </article>
+            <article class="testimonial-card">
+              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · ERAA" data-kind="member" aria-label="Perbesar testimoni chat member tentang ERAA" aria-haspopup="dialog">
+                <img src="testimoni-member-eraa.webp" width="612" height="795" loading="lazy" alt="Chat member yang mengomentari analisa ERAA dan membagikan tangkapan layar return posisinya di Stockbit">
+                <span class="image-action" aria-hidden="true">↗</span>
+              </button>
+              <div class="testimonial-copy">
+                <p>Chat member · ERAA</p>
+                <blockquote>“keren analisanya saf market outlook”</blockquote>
+              </div>
+            </article>
+            <article class="testimonial-card">
+              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · BUMI" data-kind="member" aria-label="Perbesar testimoni chat member tentang BUMI" aria-haspopup="dialog">
+                <img src="testimoni-member-bumi.webp" width="892" height="960" loading="lazy" alt="Chat member yang menyebut mengikuti analisa Outlook dan melaporkan bahwa BUMI mencapai TP3">
+                <span class="image-action" aria-hidden="true">↗</span>
+              </button>
+              <div class="testimonial-copy">
+                <p>Chat member · BUMI</p>
+                <blockquote>“udh hit smpai TP3 utk BUMI”</blockquote>
+              </div>
+            </article>
+            <article class="testimonial-card">
+              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Instagram Story SAF" data-kind="member" aria-label="Perbesar testimoni dari Instagram Story SAF" aria-haspopup="dialog">
+                <img src="testimoni-ig-posisi.webp" width="689" height="930" loading="lazy" alt="Instagram Story SAF yang menampilkan cuplikan update posisi dan pesan dari member Market Outlook">
+                <span class="image-action" aria-hidden="true">↗</span>
+              </button>
+              <div class="testimonial-copy">
+                <p>Instagram Story SAF</p>
+                <blockquote>“Uhuuu naik lgi”</blockquote>
+              </div>
+            </article>
+            <article class="testimonial-card">
+              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Chat member · DATA" data-kind="member" aria-label="Perbesar testimoni dari Chat member · DATA" aria-haspopup="dialog">
+                <img src="testimoni-member-data.webp" width="837" height="210" loading="lazy" alt="Chat member yang menceritakan transaksi DATA dan menyampaikan terima kasih kepada admin">
+                <span class="image-action" aria-hidden="true">↗</span>
+              </button>
+              <div class="testimonial-copy">
+                <p>Chat member · DATA</p>
+                <blockquote>“Thank admin.”</blockquote>
+              </div>
+            </article>
+          </div>
+          <div class="carousel-controls" hidden>
+            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="testimoni-slides" aria-label="Testimoni sebelumnya">←</button>
+            <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
+            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="testimoni-slides" aria-label="Testimoni berikutnya">→</button>
+          </div>
         </div>
       </section>
 
       <div class="history">
         <div class="history-head">
-          <h3>Dari Trading Plan hingga Take Profit</h3>
-          <p class="muted">Performance Stockpick SAF Market Outlook</p>
+          <h3>Riwayat Trading Plan</h3>
+          <p class="muted">18 stockpick pilihan · 16 Hit TP dan 2 Hit SL</p>
         </div>
 
-        <div class="history-grid">
-          <article class="history-item">
-            <div class="ticker-line"><h3 class="ticker">INET</h3><span class="tp">Hit TP 3</span></div>
-            <strong class="gain">+49,57%</strong>
-            <dl class="history-prices">
-              <div><dt>Harga entry</dt><dd>Rp234</dd></div>
-              <div><dt>Harga saat update TP</dt><dd>Rp350</dd></div>
-            </dl>
-          </article>
-          <article class="history-item">
-            <div class="ticker-line"><h3 class="ticker">ERAA</h3><span class="tp">Hit TP 3</span></div>
-            <strong class="gain">+68,01%</strong>
-            <dl class="history-prices">
-              <div><dt>Harga entry</dt><dd>Rp372</dd></div>
-              <div><dt>Harga saat update TP</dt><dd>Rp625</dd></div>
-            </dl>
-          </article>
-          <article class="history-item">
-            <div class="ticker-line"><h3 class="ticker">MBMA</h3><span class="tp">Hit TP 1</span></div>
-            <strong class="gain">+20,65%</strong>
-            <dl class="history-prices">
-              <div><dt>Harga entry</dt><dd>Rp460</dd></div>
-              <div><dt>Harga saat update TP</dt><dd>Rp555</dd></div>
-            </dl>
-          </article>
+        <div class="carousel" data-carousel role="region" aria-label="Riwayat stockpick">
+          <div class="carousel-track history-grid" id="riwayat-slides" tabindex="0" aria-label="Riwayat stockpick, gunakan panah kiri dan kanan">
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">ELSA</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+88,68%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp530</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp1.000</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">BREN</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+81,78%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp5.900</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp10.725</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">ERAA</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+68,01%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp372</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp625</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">DSSA</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+61,25%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp800</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp1.290</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">MBMA</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+55,56%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp450</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp700</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">ADMR</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+54,55%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp990</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp1.530</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">INET</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+49,57%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp234</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp350</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">DOOH</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+48,08%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp104</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp154</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">RAJA</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+47,37%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp2.850</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp4.200</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">EMTK</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+38,78%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp1.225</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp1.700</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">BUMI</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+36,89%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp244</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp334</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">RATU</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+34,29%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp7.000</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp9.400</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">BRMS</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+34,09%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp440</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp590</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">WIFI</h3><span class="tp">Hit TP 2</span></div>
+              <strong class="gain">+30,65%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp1.990</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp2.600</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">EMAS</h3><span class="tp">Hit TP 3</span></div>
+              <strong class="gain">+29,00%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp7.500</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp9.675</dd></div>
+              </dl>
+            </article>
+            <article class="history-item">
+              <div class="ticker-line"><h3 class="ticker">ADRO</h3><span class="tp">Hit TP 1</span></div>
+              <strong class="gain">+28,90%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp1.730</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp2.230</dd></div>
+              </dl>
+            </article>
+            <article class="history-item is-loss">
+              <div class="ticker-line"><h3 class="ticker">BRPT</h3><span class="tp">Hit SL</span></div>
+              <strong class="gain">−10,81%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp3.700</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp3.300</dd></div>
+              </dl>
+            </article>
+            <article class="history-item is-loss">
+              <div class="ticker-line"><h3 class="ticker">PSAB</h3><span class="tp">Hit SL</span></div>
+              <strong class="gain">−7,20%</strong>
+              <dl class="history-prices">
+                <div><dt>Harga entry rata-rata</dt><dd>Rp625</dd></div>
+                <div><dt>Harga saat update</dt><dd>Rp580</dd></div>
+              </dl>
+            </article>
+          </div>
+          <div class="carousel-controls" hidden>
+            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="riwayat-slides" aria-label="Stockpick sebelumnya">←</button>
+            <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
+            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="riwayat-slides" aria-label="Stockpick berikutnya">→</button>
+          </div>
         </div>
       </div>
 
-      <p class="results-note">Hasil masa lalu tidak menjamin hasil di masa depan.</p>
+      <p class="results-note">Persentase riwayat menunjukkan perubahan dari harga entry rata-rata ke harga saat update. Hasil masa lalu tidak menjamin hasil di masa depan.</p>
 
       <div class="payoff">
         <div>
@@ -1352,6 +1566,88 @@ em {
       setZoom(false);
       viewer.showModal();
     });
+  }
+
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  for (const carousel of document.querySelectorAll('[data-carousel]')) {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = [...track.children];
+    const controls = carousel.querySelector('.carousel-controls');
+    const count = carousel.querySelector('.carousel-count');
+    let first = 0;
+    let perView = 0;
+    let swipeStart;
+    let suppressClick = false;
+
+    function showSlides() {
+      const last = Math.min(first + perView, slides.length);
+      slides.forEach((slide, index) => {
+        slide.hidden = index < first || index >= last;
+      });
+      const range = first + 1 === last ? String(last) : `${first + 1}–${last}`;
+      count.textContent = `${range} / ${slides.length}`;
+      controls.hidden = slides.length <= perView;
+    }
+
+    function resize() {
+      const columns = Number(getComputedStyle(track).getPropertyValue('--items-per-view'));
+      if (columns === perView) return;
+      perView = columns;
+      first = Math.floor(first / perView) * perView;
+      showSlides();
+    }
+
+    function move(direction) {
+      const lastPage = Math.floor((slides.length - 1) / perView) * perView;
+      if (first + direction * perView > lastPage) first = 0;
+      else if (first + direction * perView < 0) first = lastPage;
+      else first += direction * perView;
+      showSlides();
+
+      if (!reducedMotion.matches) {
+        track.getAnimations().forEach(animation => animation.cancel());
+        track.animate([
+          { transform: `translateX(${direction * 10}px)`, opacity: .65 },
+          { transform: 'translateX(0)', opacity: 1 },
+        ], { duration: 180, easing: 'ease-out' });
+      }
+    }
+
+    controls.querySelectorAll('[data-carousel-step]').forEach(button => {
+      button.addEventListener('click', () => move(Number(button.dataset.carouselStep)));
+    });
+    track.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      const focusOnSlide = event.target !== track;
+      move(event.key === 'ArrowRight' ? 1 : -1);
+      if (focusOnSlide) track.focus({ preventScroll: true });
+    });
+    track.addEventListener('touchstart', event => {
+      swipeStart = event.touches.length === 1 ? event.touches[0] : undefined;
+      suppressClick = false;
+    }, { passive: true });
+    track.addEventListener('touchend', event => {
+      if (!swipeStart || event.touches.length) return;
+      const dx = event.changedTouches[0].clientX - swipeStart.clientX;
+      const dy = event.changedTouches[0].clientY - swipeStart.clientY;
+      swipeStart = undefined;
+      if (Math.abs(dx) < 42 || Math.abs(dx) < 1.4 * Math.abs(dy)) return;
+      suppressClick = true;
+      move(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    track.addEventListener('touchcancel', () => { swipeStart = undefined; });
+    track.addEventListener('click', event => {
+      if (!suppressClick) return;
+      suppressClick = false;
+      if (event.detail === 0 || event.pointerType === 'mouse') return;
+      event.stopPropagation();
+      event.preventDefault();
+    }, true);
+    resize();
+    window.addEventListener('resize', resize);
   }
 
   viewerZoom.addEventListener('click', () => {

@@ -919,6 +919,30 @@ em {
   *, *::before, *::after { transition: none !important; }
 }
 </style>
+<script>
+(() => {
+  if (!window.fbq) {
+    const pixel = function () {
+      if (pixel.callMethod) pixel.callMethod.apply(pixel, arguments);
+      else pixel.queue.push(arguments);
+    };
+    pixel.push = pixel;
+    pixel.loaded = true;
+    pixel.version = '2.0';
+    pixel.queue = [];
+    window.fbq = pixel;
+    window._fbq ||= pixel;
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+    document.head.append(script);
+  }
+
+  window.fbq('init', '9954571241277723');
+  window.fbq('track', 'PageView');
+})();
+</script>
 </head>
 
 <body id="atas">
@@ -1424,7 +1448,7 @@ em {
             <b>Dapatkan 13 Edisi Mingguan</b>
             <p>Mulai pakai riset SAF Market Outlook untuk swing trading yang lebih terarah.</p>
           </div>
-          <a class="button secondary" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout>Pilih 3 bulan <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button secondary" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout data-package-months="3" data-package-value="298000">Pilih 3 bulan <span class="arrow" aria-hidden="true">↗</span></a>
         </article>
 
         <article class="price-card">
@@ -1434,7 +1458,7 @@ em {
             <b>Dapatkan 25 Edisi Mingguan</b>
             <p class="saving">Lebih hemat Rp136.001</p>
           </div>
-          <a class="button secondary" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout>Pilih 6 bulan <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button secondary" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout data-package-months="6" data-package-value="459999">Pilih 6 bulan <span class="arrow" aria-hidden="true">↗</span></a>
         </article>
 
         <article class="price-card featured">
@@ -1444,7 +1468,7 @@ em {
             <b>Dapatkan 49 Edisi Mingguan</b>
             <p class="saving">Cuan Maksimal hingga Rp303.112</p>
           </div>
-          <a class="button dark-button" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout>Pilih 12 bulan <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button dark-button" href="https://safcapital.myr.id/plink/saf-market-outlook-60918" data-checkout data-package-months="12" data-package-value="888888">Pilih 12 bulan <span class="arrow" aria-hidden="true">↗</span></a>
         </article>
       </div>
 
@@ -1519,6 +1543,7 @@ em {
   const landingParams = new URLSearchParams(window.location.search);
   const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 
+  let checkoutPending = false;
   for (const link of document.querySelectorAll('a[data-checkout]')) {
     const checkoutUrl = new URL(link.href);
     for (const key of utmKeys) {
@@ -1526,6 +1551,29 @@ em {
       if (value) checkoutUrl.searchParams.set(key, value);
     }
     link.href = checkoutUrl.href;
+
+    link.addEventListener('click', event => {
+      if (event.defaultPrevented || !window.fbq) return;
+      if (checkoutPending) {
+        event.preventDefault();
+        return;
+      }
+
+      window.fbq('track', 'AddToCart', {
+        content_name: `SAF Market Outlook – ${link.dataset.packageMonths} bulan`,
+        currency: 'IDR',
+        value: Number(link.dataset.packageValue)
+      });
+
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      checkoutPending = true;
+      // Give the pixel time to start sending before this tab navigates to Mayar.
+      window.setTimeout(() => {
+        checkoutPending = false;
+        window.location.assign(link.href);
+      }, 200);
+    });
   }
 
   const tabs = [...document.querySelectorAll('[role="tab"]')];

@@ -377,29 +377,28 @@ em {
   cursor: pointer;
 }
 
-.carousel-track {
-  --items-per-view: 3;
-  display: grid;
-  grid-template-columns: repeat(var(--items-per-view), minmax(0, 1fr));
-  gap: 15px;
-  touch-action: pan-y;
-}
-.carousel [hidden] { display: none; }
-.carousel-controls {
+.ticker-viewport {
   display: flex;
-  justify-content: flex-end;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  padding-block: 3px;
+}
+.ticker-track {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  padding-inline-end: 12px;
+}
+.ticker-track > article { flex: none; width: clamp(258px, 29vw, 376px); }
+.ticker-controls {
+  display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 13px;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 9px;
 }
-.carousel-count {
-  min-width: 75px;
-  color: var(--muted);
-  font-size: .88rem;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-}
-.carousel-arrow {
+.ticker-arrow {
   display: grid;
   place-items: center;
   width: 44px;
@@ -411,13 +410,8 @@ em {
   font-size: 1.2rem;
   cursor: pointer;
 }
-.carousel-arrow:hover { background: var(--gold); color: var(--ink); }
-@media (min-width: 761px) and (max-width: 1000px) {
-  .carousel-track { --items-per-view: 2; }
-}
-@media (max-width: 760px) {
-  .carousel-track { --items-per-view: 1; gap: 10px; }
-}
+.ticker-arrow:hover { background: var(--gold); color: var(--ink); }
+.ticker-toggle { min-width: 68px; }
 
 .proof-card {
   overflow: hidden;
@@ -430,12 +424,12 @@ em {
 .proof-photo {
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
-  aspect-ratio: 1.44;
-  padding: 13px 12px;
+  height: clamp(193px, 20vw, 251px);
+  padding: 3px;
   place-items: center;
   background: #fff;
 }
-.proof-photo img { width: min(100%, 290px); height: 100%; object-fit: contain; }
+.proof-photo img { width: 100%; height: 100%; object-fit: contain; }
 .proof-photo.essa { background: #141414; }
 
 .proof-caption {
@@ -487,22 +481,6 @@ em {
 }
 .history-head h3 { font-size: clamp(1.45rem, 3vw, 2rem); }
 .history-head p { font-size: .94rem; }
-.history-viewport {
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
-  overscroll-behavior-x: contain;
-  padding-block: 3px;
-}
-.history-track {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 12px;
-  padding-inline-end: 12px;
-}
-.history-track > article { flex: none; width: clamp(248px, 28vw, 355px); }
-.ticker-controls { display: flex; justify-content: flex-end; margin-top: 8px; }
-
 .history-item {
   padding: clamp(17px, 2.3vw, 25px);
   border: 1px solid var(--line);
@@ -533,9 +511,8 @@ em {
   font-variant-numeric: tabular-nums;
 }
 .history-prices {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding-top: 12px;
   border-top: 1px solid var(--line);
@@ -900,29 +877,14 @@ em {
   .report-panel { grid-template-columns: 1fr; min-height: 0; padding: 16px; gap: 16px; }
   .report-copy h3 { margin-bottom: 7px; }
   .report-image { grid-row: 1; }
-  .proof-photo { padding: 9px; }
-  .proof-photo img { width: min(100%, 255px); }
-  .proof-caption { min-height: 49px; padding: 9px 12px; }
+  .ticker-track > article { width: min(82vw, 345px); }
+  .proof-photo { height: clamp(181px, 46vw, 241px); }
+  .proof-caption { min-height: 46px; padding: 8px 12px; }
   .history-head { align-items: start; flex-direction: column; }
-  .history-item {
-    display: grid;
-    grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr);
-    align-items: center;
-    gap: 5px 14px;
-    padding: 17px;
-  }
-  .ticker-line { justify-content: flex-start; flex-wrap: wrap; }
-  .gain { grid-column: 1; margin: 0; }
-  .history-prices {
-    grid-area: 1 / 2 / span 2 / 3;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-    padding: 0 0 0 11px;
-    border-top: 0;
-    border-left: 1px solid var(--line);
-  }
-  .history-prices dt { font-size: .81rem; }
+  .history-item { padding: 15px; }
+  .history-item .gain { font-size: clamp(2.12rem, 6.5vw, 2.65rem); margin: 10px 0 11px; }
+  .history-prices { padding-top: 9px; }
+  .history-prices dt { font-size: .8rem; }
   .history-prices dd { line-height: 1.3; }
   .payoff { grid-template-columns: 1fr; }
   .audience-layout { gap: 22px; }
@@ -950,8 +912,6 @@ em {
 
 @media (max-width: 375px) {
   .hero-actions .button { padding-inline: 12px; font-size: .9rem; }
-  .history-item { gap: 5px 8px; padding: 15px; }
-  .gain { font-size: 1.95rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1088,136 +1048,140 @@ em {
         <p>Ini beberapa cuplikan hasil posisi yang member SAF bagikan saat mengikuti stockpick SAF Capital. Kamu juga bisa trading dengan riset dari kami.</p>
       </div>
 
-      <div class="carousel" data-carousel role="region" aria-label="Hasil member">
-        <div class="carousel-track proof-grid" id="hasil-slides" tabindex="0" aria-label="Hasil member, gunakan panah kiri dan kanan">
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="INET +19,00% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member INET dengan return 19 persen" aria-haspopup="dialog">
-              <span class="proof-photo">
-                <img src="member-inet.webp" width="218" height="185" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi INET +19,00%">
-              </span>
-              <span class="proof-caption"><strong>INET</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="ESSA +10,29% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member ESSA dengan return 10,29 persen" aria-haspopup="dialog">
-              <span class="proof-photo essa">
-                <img src="member-essa.webp" width="322" height="261" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi ESSA +10,29%">
-              </span>
-              <span class="proof-caption"><strong>ESSA</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="AMMN +4,62% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member AMMN dengan return 4,62 persen" aria-haspopup="dialog">
-              <span class="proof-photo">
-                <img src="member-ammn.webp" width="306" height="245" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi AMMN +4,62%">
-              </span>
-              <span class="proof-caption"><strong>AMMN</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="MBMA +15,86% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member MBMA" aria-haspopup="dialog">
-              <span class="proof-photo">
-                <img src="hasil-member-mbma.webp" width="752" height="410" loading="lazy" alt="Cuplikan performa posisi MBMA yang dibagikan member SAF, +15,86%">
-              </span>
-              <span class="proof-caption"><strong>MBMA</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="JARR +30,53% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member JARR" aria-haspopup="dialog">
-              <span class="proof-photo">
-                <img src="hasil-member-jarr.webp" width="675" height="364" loading="lazy" alt="Cuplikan performa posisi JARR yang dibagikan member SAF, +30,53%">
-              </span>
-              <span class="proof-caption"><strong>JARR</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
-          <article class="proof-card">
-            <button type="button" class="image-trigger" data-preview="KOTA +20,96% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member KOTA" aria-haspopup="dialog">
-              <span class="proof-photo">
-                <img src="hasil-member-kota.webp" width="671" height="362" loading="lazy" alt="Cuplikan performa posisi KOTA yang dibagikan member SAF, +20,96%">
-              </span>
-              <span class="proof-caption"><strong>KOTA</strong><span aria-hidden="true">↗</span></span>
-            </button>
-          </article>
+      <div class="ticker" data-ticker data-label="Hasil member">
+        <div class="ticker-viewport" id="hasil-slides" role="region" tabindex="0" aria-label="Hasil member">
+          <div class="ticker-track">
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="INET +19,00% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member INET dengan return 19 persen" aria-haspopup="dialog">
+                <span class="proof-photo">
+                  <img src="member-inet.webp" width="218" height="185" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi INET +19,00%">
+                </span>
+                <span class="proof-caption"><strong>INET</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="ESSA +10,29% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member ESSA dengan return 10,29 persen" aria-haspopup="dialog">
+                <span class="proof-photo essa">
+                  <img src="member-essa.webp" width="322" height="261" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi ESSA +10,29%">
+                </span>
+                <span class="proof-caption"><strong>ESSA</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="AMMN +4,62% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar screenshot member AMMN dengan return 4,62 persen" aria-haspopup="dialog">
+                <span class="proof-photo">
+                  <img src="member-ammn.webp" width="306" height="245" loading="lazy" alt="Screenshot Stockbit dari member SAF, return posisi AMMN +4,62%">
+                </span>
+                <span class="proof-caption"><strong>AMMN</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="MBMA +15,86% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member MBMA" aria-haspopup="dialog">
+                <span class="proof-photo">
+                  <img src="hasil-member-mbma.webp" width="752" height="410" loading="lazy" alt="Cuplikan performa posisi MBMA yang dibagikan member SAF, +15,86%">
+                </span>
+                <span class="proof-caption"><strong>MBMA</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="JARR +30,53% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member JARR" aria-haspopup="dialog">
+                <span class="proof-photo">
+                  <img src="hasil-member-jarr.webp" width="675" height="364" loading="lazy" alt="Cuplikan performa posisi JARR yang dibagikan member SAF, +30,53%">
+                </span>
+                <span class="proof-caption"><strong>JARR</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+            <article class="proof-card">
+              <button type="button" class="image-trigger" data-preview="KOTA +20,96% · Dibagikan member SAF" data-kind="member" aria-label="Perbesar hasil posisi member KOTA" aria-haspopup="dialog">
+                <span class="proof-photo">
+                  <img src="hasil-member-kota.webp" width="671" height="362" loading="lazy" alt="Cuplikan performa posisi KOTA yang dibagikan member SAF, +20,96%">
+                </span>
+                <span class="proof-caption"><strong>KOTA</strong><span aria-hidden="true">↗</span></span>
+              </button>
+            </article>
+          </div>
         </div>
-        <div class="carousel-controls" hidden>
-          <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="hasil-slides" aria-label="Hasil member sebelumnya">←</button>
-          <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
-          <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="hasil-slides" aria-label="Hasil member berikutnya">→</button>
+        <div class="ticker-controls" hidden>
+          <button type="button" class="ticker-arrow" data-ticker-step="-1" aria-controls="hasil-slides" aria-label="Hasil member sebelumnya">←</button>
+          <button type="button" class="viewer-control ticker-toggle" aria-controls="hasil-slides">Jeda</button>
+          <button type="button" class="ticker-arrow" data-ticker-step="1" aria-controls="hasil-slides" aria-label="Hasil member berikutnya">→</button>
         </div>
       </div>
 
 
       <section class="testimonials" id="testimoni" aria-labelledby="testimoni-title">
         <h3 id="testimoni-title">Apa Kata Mereka tentang SAF Market Outlook?</h3>
-        <div class="carousel" data-carousel role="region" aria-label="Testimoni">
-          <div class="carousel-track testimonial-grid" id="testimoni-slides" tabindex="0" aria-label="Testimoni, gunakan panah kiri dan kanan">
-            <article class="testimonial-card">
-              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni Market Outlook dari Instagram Story" data-kind="member" aria-label="Perbesar testimoni Market Outlook dari Instagram Story" aria-haspopup="dialog">
-                <img src="testimoni-ig-outlook.webp" width="920" height="635" loading="lazy" alt="Cuplikan Instagram Story SAF tentang pengalaman member setelah dua minggu memakai Market Outlook">
-                <span class="image-action" aria-hidden="true">↗</span>
-              </button>
-              <div class="testimonial-copy">
-                <p>Instagram Story SAF</p>
-                <blockquote>“baru jalan 2 minggu tp kok cocok”</blockquote>
-              </div>
-            </article>
-            <article class="testimonial-card">
-              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · ERAA" data-kind="member" aria-label="Perbesar testimoni chat member tentang ERAA" aria-haspopup="dialog">
-                <img src="testimoni-member-eraa.webp" width="612" height="795" loading="lazy" alt="Chat member yang mengomentari analisa ERAA dan membagikan tangkapan layar return posisinya di Stockbit">
-                <span class="image-action" aria-hidden="true">↗</span>
-              </button>
-              <div class="testimonial-copy">
-                <p>Chat member · ERAA</p>
-                <blockquote>“keren analisanya saf market outlook”</blockquote>
-              </div>
-            </article>
-            <article class="testimonial-card">
-              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · BUMI" data-kind="member" aria-label="Perbesar testimoni chat member tentang BUMI" aria-haspopup="dialog">
-                <img src="testimoni-member-bumi.webp" width="892" height="960" loading="lazy" alt="Chat member yang menyebut mengikuti analisa Outlook dan melaporkan bahwa BUMI mencapai TP3">
-                <span class="image-action" aria-hidden="true">↗</span>
-              </button>
-              <div class="testimonial-copy">
-                <p>Chat member · BUMI</p>
-                <blockquote>“udh hit smpai TP3 utk BUMI”</blockquote>
-              </div>
-            </article>
-            <article class="testimonial-card">
-              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Instagram Story SAF" data-kind="member" aria-label="Perbesar testimoni dari Instagram Story SAF" aria-haspopup="dialog">
-                <img src="testimoni-ig-posisi.webp" width="689" height="930" loading="lazy" alt="Instagram Story SAF yang menampilkan cuplikan update posisi dan pesan dari member Market Outlook">
-                <span class="image-action" aria-hidden="true">↗</span>
-              </button>
-              <div class="testimonial-copy">
-                <p>Instagram Story SAF</p>
-                <blockquote>“Uhuuu naik lgi”</blockquote>
-              </div>
-            </article>
-            <article class="testimonial-card">
-              <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Chat member · DATA" data-kind="member" aria-label="Perbesar testimoni dari Chat member · DATA" aria-haspopup="dialog">
-                <img src="testimoni-member-data.webp" width="837" height="210" loading="lazy" alt="Chat member yang menceritakan transaksi DATA dan menyampaikan terima kasih kepada admin">
-                <span class="image-action" aria-hidden="true">↗</span>
-              </button>
-              <div class="testimonial-copy">
-                <p>Chat member · DATA</p>
-                <blockquote>“Thank admin.”</blockquote>
-              </div>
-            </article>
+        <div class="ticker" data-ticker data-label="Testimoni">
+          <div class="ticker-viewport" id="testimoni-slides" role="region" tabindex="0" aria-label="Testimoni">
+            <div class="ticker-track">
+              <article class="testimonial-card">
+                <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni Market Outlook dari Instagram Story" data-kind="member" aria-label="Perbesar testimoni Market Outlook dari Instagram Story" aria-haspopup="dialog">
+                  <img src="testimoni-ig-outlook.webp" width="920" height="635" loading="lazy" alt="Cuplikan Instagram Story SAF tentang pengalaman member setelah dua minggu memakai Market Outlook">
+                  <span class="image-action" aria-hidden="true">↗</span>
+                </button>
+                <div class="testimonial-copy">
+                  <p>Instagram Story SAF</p>
+                  <blockquote>“baru jalan 2 minggu tp kok cocok”</blockquote>
+                </div>
+              </article>
+              <article class="testimonial-card">
+                <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · ERAA" data-kind="member" aria-label="Perbesar testimoni chat member tentang ERAA" aria-haspopup="dialog">
+                  <img src="testimoni-member-eraa.webp" width="612" height="795" loading="lazy" alt="Chat member yang mengomentari analisa ERAA dan membagikan tangkapan layar return posisinya di Stockbit">
+                  <span class="image-action" aria-hidden="true">↗</span>
+                </button>
+                <div class="testimonial-copy">
+                  <p>Chat member · ERAA</p>
+                  <blockquote>“keren analisanya saf market outlook”</blockquote>
+                </div>
+              </article>
+              <article class="testimonial-card">
+                <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni chat member · BUMI" data-kind="member" aria-label="Perbesar testimoni chat member tentang BUMI" aria-haspopup="dialog">
+                  <img src="testimoni-member-bumi.webp" width="892" height="960" loading="lazy" alt="Chat member yang menyebut mengikuti analisa Outlook dan melaporkan bahwa BUMI mencapai TP3">
+                  <span class="image-action" aria-hidden="true">↗</span>
+                </button>
+                <div class="testimonial-copy">
+                  <p>Chat member · BUMI</p>
+                  <blockquote>“udh hit smpai TP3 utk BUMI”</blockquote>
+                </div>
+              </article>
+              <article class="testimonial-card">
+                <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Instagram Story SAF" data-kind="member" aria-label="Perbesar testimoni dari Instagram Story SAF" aria-haspopup="dialog">
+                  <img src="testimoni-ig-posisi.webp" width="689" height="930" loading="lazy" alt="Instagram Story SAF yang menampilkan cuplikan update posisi dan pesan dari member Market Outlook">
+                  <span class="image-action" aria-hidden="true">↗</span>
+                </button>
+                <div class="testimonial-copy">
+                  <p>Instagram Story SAF</p>
+                  <blockquote>“Uhuuu naik lgi”</blockquote>
+                </div>
+              </article>
+              <article class="testimonial-card">
+                <button type="button" class="testimonial-image image-trigger" data-preview="Testimoni · Chat member · DATA" data-kind="member" aria-label="Perbesar testimoni dari Chat member · DATA" aria-haspopup="dialog">
+                  <img src="testimoni-member-data.webp" width="837" height="210" loading="lazy" alt="Chat member yang menceritakan transaksi DATA dan menyampaikan terima kasih kepada admin">
+                  <span class="image-action" aria-hidden="true">↗</span>
+                </button>
+                <div class="testimonial-copy">
+                  <p>Chat member · DATA</p>
+                  <blockquote>“Thank admin.”</blockquote>
+                </div>
+              </article>
+            </div>
           </div>
-          <div class="carousel-controls" hidden>
-            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="testimoni-slides" aria-label="Testimoni sebelumnya">←</button>
-            <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
-            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="testimoni-slides" aria-label="Testimoni berikutnya">→</button>
+          <div class="ticker-controls" hidden>
+            <button type="button" class="ticker-arrow" data-ticker-step="-1" aria-controls="testimoni-slides" aria-label="Testimoni sebelumnya">←</button>
+            <button type="button" class="viewer-control ticker-toggle" aria-controls="testimoni-slides">Jeda</button>
+            <button type="button" class="ticker-arrow" data-ticker-step="1" aria-controls="testimoni-slides" aria-label="Testimoni berikutnya">→</button>
           </div>
         </div>
       </section>
 
-      <div class="history">
+      <div class="history" data-ticker data-label="Riwayat stockpick">
         <div class="history-head">
           <h3>Riwayat Trading Plan</h3>
           <p class="muted">18 stockpick pilihan · 16 Hit TP dan 2 Hit SL</p>
         </div>
 
-        <div class="history-viewport" id="riwayat-slides" role="region" tabindex="0" aria-label="Riwayat stockpick">
-          <div class="history-track">
+        <div class="ticker-viewport" id="riwayat-slides" role="region" tabindex="0" aria-label="Riwayat stockpick">
+          <div class="ticker-track">
             <article class="history-item">
               <div class="ticker-line"><h3 class="ticker">ELSA</h3><span class="tp">Hit TP 3</span></div>
               <strong class="gain">+88,68%</strong>
@@ -1365,7 +1329,7 @@ em {
           </div>
         </div>
         <div class="ticker-controls" hidden>
-          <button type="button" class="viewer-control" id="ticker-toggle" aria-controls="riwayat-slides">Jeda</button>
+          <button type="button" class="viewer-control ticker-toggle" aria-controls="riwayat-slides">Jeda</button>
         </div>
       </div>
 
@@ -1609,174 +1573,135 @@ em {
     viewerMedia.scrollTo(0, 0);
   }
 
-  for (const trigger of document.querySelectorAll('[data-preview]')) {
-    trigger.addEventListener('click', () => {
-      const image = trigger.querySelector('img');
-      openedBy = trigger;
-      viewerTitle.textContent = trigger.dataset.preview;
-      viewer.dataset.kind = trigger.dataset.kind || 'report';
-      viewerZoom.hidden = viewer.dataset.kind === 'member';
-      viewerImage.alt = image?.alt || trigger.dataset.preview;
-      viewerImage.src = trigger.dataset.src || image.src;
-      setZoom(false);
-      viewer.showModal();
-    });
-  }
+  document.addEventListener('click', event => {
+    const trigger = event.target.closest('[data-preview]');
+    if (!trigger) return;
 
+    const image = trigger.querySelector('img');
+    openedBy = trigger.closest('[data-repeat]') ? trigger.closest('.ticker-viewport') : trigger;
+    viewerTitle.textContent = trigger.dataset.preview;
+    viewer.dataset.kind = trigger.dataset.kind || 'report';
+    viewerZoom.hidden = viewer.dataset.kind === 'member';
+    viewerImage.alt = image?.alt || trigger.dataset.preview;
+    viewerImage.src = trigger.dataset.src || image.src;
+    setZoom(false);
+    viewer.showModal();
+  });
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  for (const carousel of document.querySelectorAll('[data-carousel]')) {
-    const track = carousel.querySelector('.carousel-track');
-    const slides = [...track.children];
-    const controls = carousel.querySelector('.carousel-controls');
-    const count = carousel.querySelector('.carousel-count');
-    let first = 0;
-    let perView = 0;
-    let swipeStart;
-    let suppressClick = false;
+  for (const ticker of document.querySelectorAll('[data-ticker]')) {
+    const viewport = ticker.querySelector('.ticker-viewport');
+    const track = viewport.firstElementChild;
+    const controls = ticker.querySelector('.ticker-controls');
+    const toggle = controls.querySelector('.ticker-toggle');
+    const repeated = track.cloneNode(true);
+    repeated.dataset.repeat = '';
+    repeated.setAttribute('aria-hidden', 'true');
+    repeated.querySelectorAll('button').forEach(button => { button.tabIndex = -1; });
+    viewport.append(repeated);
 
-    function showSlides() {
-      const last = Math.min(first + perView, slides.length);
-      slides.forEach((slide, index) => {
-        slide.hidden = index < first || index >= last;
-      });
-      const range = first + 1 === last ? String(last) : `${first + 1}–${last}`;
-      count.textContent = `${range} / ${slides.length}`;
-      controls.hidden = slides.length <= perView;
+    let paused = reducedMotion.matches;
+    let inView = false;
+    let hovered = false;
+    let keyboardFocus = false;
+    let frame;
+    let lastTime;
+    let resumeTimer;
+    let position = 0;
+
+    function advance(now) {
+      if (viewer.open) {
+        frame = undefined;
+        return;
+      }
+      const loopWidth = track.offsetWidth;
+      if (loopWidth && lastTime !== undefined) {
+        position = (position + Math.min(48, now - lastTime) * 0.036) % loopWidth;
+        viewport.scrollLeft = position;
+      }
+      lastTime = now;
+      frame = requestAnimationFrame(advance);
     }
 
-    function resize() {
-      const columns = Number(getComputedStyle(track).getPropertyValue('--items-per-view'));
-      if (columns === perView) return;
-      perView = columns;
-      first = Math.floor(first / perView) * perView;
-      showSlides();
-    }
-
-    function move(direction) {
-      const lastPage = Math.floor((slides.length - 1) / perView) * perView;
-      if (first + direction * perView > lastPage) first = 0;
-      else if (first + direction * perView < 0) first = lastPage;
-      else first += direction * perView;
-      showSlides();
-
-      if (!reducedMotion.matches) {
-        track.getAnimations().forEach(animation => animation.cancel());
-        track.animate([
-          { transform: `translateX(${direction * 10}px)`, opacity: .65 },
-          { transform: 'translateX(0)', opacity: 1 },
-        ], { duration: 180, easing: 'ease-out' });
+    function sync() {
+      const action = paused ? 'Putar' : 'Jeda';
+      toggle.textContent = action;
+      toggle.setAttribute('aria-label', `${action} ${ticker.dataset.label.toLowerCase()}`);
+      const shouldMove = inView && !paused && !hovered && !keyboardFocus &&
+        resumeTimer === undefined && !document.hidden && !viewer.open;
+      if (shouldMove && frame === undefined) {
+        position = viewport.scrollLeft;
+        lastTime = undefined;
+        frame = requestAnimationFrame(advance);
+      } else if (!shouldMove && frame !== undefined) {
+        cancelAnimationFrame(frame);
+        frame = undefined;
       }
     }
 
-    controls.querySelectorAll('[data-carousel-step]').forEach(button => {
-      button.addEventListener('click', () => move(Number(button.dataset.carouselStep)));
-    });
-    track.addEventListener('keydown', event => {
-      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-      event.preventDefault();
-      const focusOnSlide = event.target !== track;
-      move(event.key === 'ArrowRight' ? 1 : -1);
-      if (focusOnSlide) track.focus({ preventScroll: true });
-    });
-    track.addEventListener('touchstart', event => {
-      swipeStart = event.touches.length === 1 ? event.touches[0] : undefined;
-      suppressClick = false;
-    }, { passive: true });
-    track.addEventListener('touchend', event => {
-      if (!swipeStart || event.touches.length) return;
-      const dx = event.changedTouches[0].clientX - swipeStart.clientX;
-      const dy = event.changedTouches[0].clientY - swipeStart.clientY;
-      swipeStart = undefined;
-      if (Math.abs(dx) < 42 || Math.abs(dx) < 1.4 * Math.abs(dy)) return;
-      suppressClick = true;
-      move(dx < 0 ? 1 : -1);
-    }, { passive: true });
-    track.addEventListener('touchcancel', () => { swipeStart = undefined; });
-    track.addEventListener('click', event => {
-      if (!suppressClick) return;
-      suppressClick = false;
-      if (event.detail === 0 || event.pointerType === 'mouse') return;
-      event.stopPropagation();
-      event.preventDefault();
-    }, true);
-    resize();
-    window.addEventListener('resize', resize);
-  }
-
-  const ticker = document.getElementById('riwayat-slides');
-  const tickerTrack = ticker.querySelector('.history-track');
-  const tickerToggle = document.getElementById('ticker-toggle');
-  const repeatTrack = tickerTrack.cloneNode(true);
-  repeatTrack.setAttribute('aria-hidden', 'true');
-  ticker.append(repeatTrack);
-
-  let tickerPaused = reducedMotion.matches;
-  let tickerVisible = false;
-  let tickerHovered = false;
-  let tickerFrame;
-  let lastTick;
-  let tickerPosition = 0;
-
-  function scrollTicker(now) {
-    const loopWidth = tickerTrack.offsetWidth;
-    if (loopWidth && lastTick !== undefined) {
-      tickerPosition = (tickerPosition + Math.min(48, now - lastTick) * 0.042) % loopWidth;
-      ticker.scrollLeft = tickerPosition;
+    function deferMotion() {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => {
+        resumeTimer = undefined;
+        sync();
+      }, 1800);
+      sync();
     }
-    lastTick = now;
-    tickerFrame = requestAnimationFrame(scrollTicker);
-  }
 
-  function syncTicker() {
-    tickerToggle.textContent = tickerPaused ? 'Putar' : 'Jeda';
-    tickerToggle.setAttribute('aria-label', tickerPaused ? 'Putar riwayat stockpick' : 'Jeda riwayat stockpick');
-    const canMove = !tickerPaused && tickerVisible && !tickerHovered && !document.hidden;
-    if (canMove && tickerFrame === undefined) {
-      tickerPosition = ticker.scrollLeft;
-      lastTick = undefined;
-      tickerFrame = requestAnimationFrame(scrollTicker);
-    } else if (!canMove && tickerFrame !== undefined) {
-      cancelAnimationFrame(tickerFrame);
-      tickerFrame = undefined;
+    controls.hidden = false;
+    toggle.addEventListener('click', () => {
+      paused = !paused;
+      clearTimeout(resumeTimer);
+      resumeTimer = undefined;
+      sync();
+    });
+    for (const button of controls.querySelectorAll('[data-ticker-step]')) {
+      button.addEventListener('click', () => {
+        const [first, second] = track.children;
+        const stride = second.offsetLeft - first.offsetLeft;
+        const direction = Number(button.dataset.tickerStep);
+        const current = viewport.scrollLeft;
+        const index = direction > 0 ? Math.floor((current + 1) / stride) + 1 : Math.ceil((current - 1) / stride) - 1;
+        const loopWidth = track.offsetWidth;
+        deferMotion();
+        viewport.scrollLeft = (index * stride % loopWidth + loopWidth) % loopWidth;
+      });
     }
+    viewport.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      hovered = true;
+      sync();
+    });
+    viewport.addEventListener('pointerleave', () => {
+      hovered = false;
+      sync();
+    });
+    viewport.addEventListener('pointerdown', deferMotion);
+    viewport.addEventListener('scroll', () => {
+      if (resumeTimer !== undefined) deferMotion();
+    }, { passive: true });
+    viewport.addEventListener('focusin', event => {
+      keyboardFocus = event.target.matches(':focus-visible');
+      sync();
+    });
+    viewport.addEventListener('focusout', event => {
+      if (viewport.contains(event.relatedTarget)) return;
+      keyboardFocus = false;
+      sync();
+    });
+    document.addEventListener('visibilitychange', sync);
+    viewer.addEventListener('close', sync);
+    reducedMotion.addEventListener('change', event => {
+      paused = event.matches;
+      sync();
+    });
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      sync();
+    }).observe(viewport);
+    sync();
   }
-
-  tickerToggle.parentElement.hidden = false;
-  tickerToggle.addEventListener('click', () => {
-    tickerPaused = !tickerPaused;
-    syncTicker();
-  });
-  ticker.addEventListener('pointerenter', event => {
-    if (event.pointerType !== 'mouse') return;
-    tickerHovered = true;
-    syncTicker();
-  });
-  ticker.addEventListener('pointerleave', () => {
-    tickerHovered = false;
-    syncTicker();
-  });
-  ticker.addEventListener('pointerdown', event => {
-    if (event.pointerType === 'mouse') return;
-    tickerPaused = true;
-    syncTicker();
-  });
-  ticker.addEventListener('keydown', event => {
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-    tickerPaused = true;
-    syncTicker();
-  });
-  document.addEventListener('visibilitychange', syncTicker);
-  reducedMotion.addEventListener('change', event => {
-    tickerPaused = event.matches;
-    syncTicker();
-  });
-  new IntersectionObserver(([entry]) => {
-    tickerVisible = entry.isIntersecting;
-    syncTicker();
-  }).observe(ticker);
-  syncTicker();
 
   viewerZoom.addEventListener('click', () => {
     setZoom(viewerZoom.getAttribute('aria-pressed') === 'false');

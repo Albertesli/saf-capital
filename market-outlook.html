@@ -487,6 +487,22 @@ em {
 }
 .history-head h3 { font-size: clamp(1.45rem, 3vw, 2rem); }
 .history-head p { font-size: .94rem; }
+.history-viewport {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  padding-block: 3px;
+}
+.history-track {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  padding-inline-end: 12px;
+}
+.history-track > article { flex: none; width: clamp(248px, 28vw, 355px); }
+.ticker-controls { display: flex; justify-content: flex-end; margin-top: 8px; }
+
 .history-item {
   padding: clamp(17px, 2.3vw, 25px);
   border: 1px solid var(--line);
@@ -792,7 +808,48 @@ em {
   background: #242322;
 }
 .viewer-media img { width: 100%; margin-inline: auto; background: #fff; }
-.viewer[data-kind="member"] .viewer-media img { max-width: 420px; }
+.viewer [hidden], .ticker-controls[hidden] { display: none; }
+.viewer-close-icon { display: none; }
+.viewer[data-kind="member"] {
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+}
+.viewer[data-kind="member"] .viewer-head {
+  position: absolute;
+  inset: 6px 6px auto auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.viewer[data-kind="member"] .viewer-head h2 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.viewer[data-kind="member"] .viewer-close {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  padding: 0;
+  background: #171716ed;
+  font-size: 1.4rem;
+}
+.viewer[data-kind="member"] .viewer-close-icon { display: inline; }
+.viewer[data-kind="member"] .viewer-close-label { display: none; }
+.viewer[data-kind="member"] .viewer-media { padding: 0; max-height: none; background: transparent; }
+.viewer[data-kind="member"] .viewer-media img {
+  width: auto;
+  max-width: min(100%, 640px);
+  max-height: 86vh;
+  max-height: 86dvh;
+  object-fit: contain;
+  background: transparent;
+}
 .viewer-media.zoomed img { width: 960px; max-width: none; }
 
 @media (max-width: 1000px) {
@@ -1027,7 +1084,7 @@ em {
   <section class="section dark" id="hasil" aria-labelledby="results-title">
     <div class="wrap">
       <div class="section-head">
-        <h2 id="results-title">Feedback yang dibagikan <em>Member SAF Capital</em></h2>
+        <h2 id="results-title">Hasil Member <em>SAF Market Outlook</em></h2>
         <p>Ini beberapa cuplikan hasil posisi yang member SAF bagikan saat mengikuti stockpick SAF Capital. Kamu juga bisa trading dengan riset dari kami.</p>
       </div>
 
@@ -1091,7 +1148,7 @@ em {
 
 
       <section class="testimonials" id="testimoni" aria-labelledby="testimoni-title">
-        <h3 id="testimoni-title">Cerita dari member Market Outlook</h3>
+        <h3 id="testimoni-title">Apa Kata Mereka tentang SAF Market Outlook?</h3>
         <div class="carousel" data-carousel role="region" aria-label="Testimoni">
           <div class="carousel-track testimonial-grid" id="testimoni-slides" tabindex="0" aria-label="Testimoni, gunakan panah kiri dan kanan">
             <article class="testimonial-card">
@@ -1159,8 +1216,8 @@ em {
           <p class="muted">18 stockpick pilihan · 16 Hit TP dan 2 Hit SL</p>
         </div>
 
-        <div class="carousel" data-carousel role="region" aria-label="Riwayat stockpick">
-          <div class="carousel-track history-grid" id="riwayat-slides" tabindex="0" aria-label="Riwayat stockpick, gunakan panah kiri dan kanan">
+        <div class="history-viewport" id="riwayat-slides" role="region" tabindex="0" aria-label="Riwayat stockpick">
+          <div class="history-track">
             <article class="history-item">
               <div class="ticker-line"><h3 class="ticker">ELSA</h3><span class="tp">Hit TP 3</span></div>
               <strong class="gain">+88,68%</strong>
@@ -1306,11 +1363,9 @@ em {
               </dl>
             </article>
           </div>
-          <div class="carousel-controls" hidden>
-            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-controls="riwayat-slides" aria-label="Stockpick sebelumnya">←</button>
-            <span class="carousel-count" aria-live="polite" aria-atomic="true"></span>
-            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-controls="riwayat-slides" aria-label="Stockpick berikutnya">→</button>
-          </div>
+        </div>
+        <div class="ticker-controls" hidden>
+          <button type="button" class="viewer-control" id="ticker-toggle" aria-controls="riwayat-slides">Jeda</button>
         </div>
       </div>
 
@@ -1487,7 +1542,7 @@ em {
     <h2 id="viewer-title">Cuplikan analisa</h2>
     <button class="viewer-control" type="button" id="viewer-zoom" aria-pressed="false">Perbesar</button>
     <form method="dialog">
-      <button class="viewer-control" type="submit" autofocus>Tutup</button>
+      <button class="viewer-control viewer-close" type="submit" aria-label="Tutup" autofocus><span class="viewer-close-label">Tutup</span><span class="viewer-close-icon" aria-hidden="true">×</span></button>
     </form>
   </div>
   <div class="viewer-media">
@@ -1649,6 +1704,79 @@ em {
     resize();
     window.addEventListener('resize', resize);
   }
+
+  const ticker = document.getElementById('riwayat-slides');
+  const tickerTrack = ticker.querySelector('.history-track');
+  const tickerToggle = document.getElementById('ticker-toggle');
+  const repeatTrack = tickerTrack.cloneNode(true);
+  repeatTrack.setAttribute('aria-hidden', 'true');
+  ticker.append(repeatTrack);
+
+  let tickerPaused = reducedMotion.matches;
+  let tickerVisible = false;
+  let tickerHovered = false;
+  let tickerFrame;
+  let lastTick;
+  let tickerPosition = 0;
+
+  function scrollTicker(now) {
+    const loopWidth = tickerTrack.offsetWidth;
+    if (loopWidth && lastTick !== undefined) {
+      tickerPosition = (tickerPosition + Math.min(48, now - lastTick) * 0.042) % loopWidth;
+      ticker.scrollLeft = tickerPosition;
+    }
+    lastTick = now;
+    tickerFrame = requestAnimationFrame(scrollTicker);
+  }
+
+  function syncTicker() {
+    tickerToggle.textContent = tickerPaused ? 'Putar' : 'Jeda';
+    tickerToggle.setAttribute('aria-label', tickerPaused ? 'Putar riwayat stockpick' : 'Jeda riwayat stockpick');
+    const canMove = !tickerPaused && tickerVisible && !tickerHovered && !document.hidden;
+    if (canMove && tickerFrame === undefined) {
+      tickerPosition = ticker.scrollLeft;
+      lastTick = undefined;
+      tickerFrame = requestAnimationFrame(scrollTicker);
+    } else if (!canMove && tickerFrame !== undefined) {
+      cancelAnimationFrame(tickerFrame);
+      tickerFrame = undefined;
+    }
+  }
+
+  tickerToggle.parentElement.hidden = false;
+  tickerToggle.addEventListener('click', () => {
+    tickerPaused = !tickerPaused;
+    syncTicker();
+  });
+  ticker.addEventListener('pointerenter', event => {
+    if (event.pointerType !== 'mouse') return;
+    tickerHovered = true;
+    syncTicker();
+  });
+  ticker.addEventListener('pointerleave', () => {
+    tickerHovered = false;
+    syncTicker();
+  });
+  ticker.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'mouse') return;
+    tickerPaused = true;
+    syncTicker();
+  });
+  ticker.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    tickerPaused = true;
+    syncTicker();
+  });
+  document.addEventListener('visibilitychange', syncTicker);
+  reducedMotion.addEventListener('change', event => {
+    tickerPaused = event.matches;
+    syncTicker();
+  });
+  new IntersectionObserver(([entry]) => {
+    tickerVisible = entry.isIntersecting;
+    syncTicker();
+  }).observe(ticker);
+  syncTicker();
 
   viewerZoom.addEventListener('click', () => {
     setZoom(viewerZoom.getAttribute('aria-pressed') === 'false');
